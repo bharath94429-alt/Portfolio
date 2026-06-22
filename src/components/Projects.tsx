@@ -7,19 +7,22 @@ const projects = [
     id: 1,
     title: "Attendance Management App",
     description: "Streamlining classroom tracking with intuitive interfaces.",
-    tech: "React Native • Firebase • TypeScript"
+    tech: "React Native • Firebase • TypeScript",
+    link: "#"
   },
   {
     id: 2,
     title: "Infinity Studio",
     description: "Digital agency landing experience with immersive animations.",
-    tech: "Next.js • Tailwind CSS • Framer Motion"
+    tech: "Next.js • Tailwind CSS • Framer Motion",
+    link: "https://infinity-studio-jet.vercel.app/"
   },
   {
     id: 4,
     title: "AI Experiments",
     description: "Local model explorations and prompt engineering workflows.",
-    tech: "Python • Ollama • LLMs"
+    tech: "Python • Ollama • LLMs",
+    link: "#"
   }
 ];
 
@@ -43,7 +46,9 @@ export default function Projects() {
         {projects.map((project, index) => (
           <motion.a
             key={project.id}
-            href="#"
+            href={project.link}
+            target={project.link !== "#" ? "_blank" : undefined}
+            rel={project.link !== "#" ? "noopener noreferrer" : undefined}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
