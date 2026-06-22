@@ -17,9 +17,15 @@ export default function Exploring() {
 
   return (
     <section className="py-32 overflow-hidden border-y border-white/5 bg-white/[0.01]" ref={containerRef}>
-      <div className="px-6 md:px-24 max-w-[1400px] mx-auto mb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="px-6 md:px-24 max-w-[1400px] mx-auto mb-16"
+      >
         <span className="text-xs uppercase tracking-[0.2em] text-white/40 block">Currently Exploring</span>
-      </div>
+      </motion.div>
       
       {/* Dynamic Marquee-style Flow */}
       <div className="relative w-full flex flex-col gap-8 md:gap-16">

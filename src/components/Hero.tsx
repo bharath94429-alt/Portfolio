@@ -1,6 +1,5 @@
 import { motion } from 'motion/react';
 import { ArrowDown } from 'lucide-react';
-import LanyardHero from './LanyardHero';
 
 export default function Hero() {
   const containerVars = {
@@ -25,13 +24,6 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-24 pt-24 pb-12 overflow-hidden mx-auto max-w-[1400px]">
       
-      {/* Background Lanyard element */}
-      <div className="absolute inset-0 z-0 pointer-events-none flex justify-center lg:justify-end">
-        <div className="w-full lg:w-[55%] h-full opacity-60 lg:opacity-100 pointer-events-auto flex items-center justify-center mt-32 lg:mt-0">
-          <LanyardHero />
-        </div>
-      </div>
-
       <motion.div
         variants={containerVars}
         initial="hidden"

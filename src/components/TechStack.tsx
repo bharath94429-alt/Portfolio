@@ -28,8 +28,8 @@ export default function TechStack() {
   return (
     <section id="tech" className="py-32 px-6 md:px-24 max-w-[1400px] mx-auto overflow-hidden">
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       >
