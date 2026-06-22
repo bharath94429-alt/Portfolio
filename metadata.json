@@ -1,0 +1,6 @@
+{
+  "name": "Bharath Portfolio",
+  "description": "An award-winning, premium editorial minimal personal portfolio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
