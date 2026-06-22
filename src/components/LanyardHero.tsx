@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import Lanyard from './Lanyard';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useCardTexture } from './useCardTexture';
+
+const Lanyard = lazy(() => import('./Lanyard'));
 
 export default function LanyardHero() {
   const { frontImage, backImage, lanyardImage } = useCardTexture();
@@ -16,15 +17,22 @@ export default function LanyardHero() {
   // Wait for the textures to generate, or pass null
   return (
     <div className="w-full h-full relative" style={{ height: '100vh' }}>
-      <Lanyard 
-        position={isDesktop ? [0, 0, 20] : [0, 5, 30]} 
-        gravity={[0, -40, 0]} 
-        frontImage={frontImage} 
-        backImage={backImage} 
-        lanyardImage={lanyardImage}
-        imageFit="cover" 
-        lanyardWidth={1.5}
-      />
+      <Suspense fallback={
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50">
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
+          <span className="text-xs font-mono tracking-widest uppercase">Initializing 3D...</span>
+        </div>
+      }>
+        <Lanyard 
+          position={isDesktop ? [0, 0, 20] : [0, 5, 30]} 
+          gravity={[0, -40, 0]} 
+          frontImage={frontImage} 
+          backImage={backImage} 
+          lanyardImage={lanyardImage}
+          imageFit="cover" 
+          lanyardWidth={1.5}
+        />
+      </Suspense>
     </div>
   );
 }

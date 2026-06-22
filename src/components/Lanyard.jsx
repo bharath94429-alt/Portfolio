@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, Component, Suspense } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
@@ -21,7 +21,60 @@ const BLANK_PIXEL =
 const FRONT_UV_RECT = { x: 0, y: 0, w: 0.5, h: 0.755 };
 const BACK_UV_RECT = { x: 0.5, y: 0, w: 0.5, h: 0.757 };
 
-export default function Lanyard({
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('GLB Load Error caught by ErrorBoundary:', error);
+    this.setState({ errorInfo: error.message });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback(this.state.errorInfo);
+    }
+    return this.props.children;
+  }
+}
+
+export default function Lanyard(props) {
+  return (
+    <div className="lanyard-wrapper w-full h-full relative flex items-center justify-center">
+      <ErrorBoundary fallback={(error) => (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white/50 bg-black/20 backdrop-blur-sm rounded-3xl p-6">
+          <div className="w-48 h-72 border border-white/20 bg-white/5 rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden mb-6">
+             {props.frontImage ? (
+               <img src={props.frontImage} className="w-full h-full object-cover" alt="Card Fallback" />
+             ) : (
+               <span className="text-xs uppercase tracking-widest text-center px-4 font-mono">ID Card<br/>Unavailable</span>
+             )}
+          </div>
+          <span className="text-xs font-mono bg-red-500/10 text-red-400 px-4 py-2 rounded-full border border-red-500/20 text-center max-w-sm break-words">
+            Model Corrupted: {error || 'Offset is outside bounds of DataView'}
+          </span>
+        </div>
+      )}>
+        <Suspense fallback={
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white/50">
+            <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
+            <span className="text-[10px] font-mono uppercase tracking-widest">Loading 3D Environment</span>
+          </div>
+        }>
+          <LanyardCanvas {...props} />
+        </Suspense>
+      </ErrorBoundary>
+    </div>
+  );
+}
+
+function LanyardCanvas({
   position = [0, 0, 30],
   gravity = [0, -40, 0],
   fov = 20,
@@ -41,13 +94,13 @@ export default function Lanyard({
   }, []);
 
   return (
-    <div className="lanyard-wrapper">
-      <Canvas
-        camera={{ position: position, fov: fov }}
-        dpr={[1, isMobile ? 1.5 : 2]}
-        gl={{ alpha: transparent }}
-        onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
-      >
+    <Canvas
+      camera={{ position: position, fov: fov }}
+      dpr={[1, isMobile ? 1.5 : 2]}
+      gl={{ alpha: transparent }}
+      onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+      className="w-full h-full"
+    >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
           <Band
@@ -90,7 +143,6 @@ export default function Lanyard({
           />
         </Environment>
       </Canvas>
-    </div>
   );
 }
 function Band({
